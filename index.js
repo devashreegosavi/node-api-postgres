@@ -18,15 +18,18 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
   });
-  
+
 app.get('/', (request, response) => {
     response.json({ info: 'Node.js, Express, and Postgres API' })
   })
 
   app.listen(port, () => {
     console.log(`App running on port ${port}.`)
+    console.log('in listen')
   })
 
 
   app.get('/users', db.getUsers)
   app.get('/users/:id', db.getUserById)
+  
+
