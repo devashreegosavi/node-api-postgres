@@ -28,8 +28,47 @@ const getUsers = (request, response) => {
     })
   }
 
+  const createUser = (request, response) => {
+    const { username, office_id } = request.body
+  
+    pool.query('INSERT INTO ngdrstab_mst_user (username, office_id) VALUES ($1, $2) RETURNING *', [username, office_id], (error, results) => {
+      if (error) {
+        throw error
+      }
+      response.status(201).send(`User added with ID: ${results.rows[0].id}`)
+    })
+  }
+
+  const updateUser = (request, response) => {
+    const user_id = parseInt(request.params.id)
+    const { username, office_id } = request.body
+  
+    pool.query(
+      'UPDATE ngdrstab_mst_user SET username = $1, office_id = $2 WHERE user_id = $3', [username, office_id, user_id], (error, results) => {
+        if (error) {
+          throw error
+        }
+        response.status(200).send(`User modified with ID: ${user_id}`)
+      }
+    )
+  }
+
+
+  const deleteUser = (request, response) => {
+    const id = parseInt(request.params.id)
+  
+    pool.query('DELETE FROM ngdrstab_mst_user WHERE user_id = $1', [id], (error, results) => {
+      if (error) {
+        throw error
+      }
+      response.status(200).send(`User deleted with ID: ${id}`)
+    })
+  }
 
   module.exports = {
     getUsers,
-    getUserById
+    getUserById,
+    createUser,
+    updateUser,
+    deleteUser
   }
